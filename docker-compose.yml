@@ -1,0 +1,25 @@
+services:
+  media-forge-api:
+    container_name: media_forge_backend
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: media_forge_db
+    image: postgres:18
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    volumes:
+      - media_forge_db_data:/var/lib/postgresql
+
+volumes:
+  media_forge_db_data:
