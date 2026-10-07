@@ -8,6 +8,17 @@ app = FastAPI()
 v1_router = APIRouter(prefix="/api/v1")
 
 
+# Routes
+
+
+# ======= Auth Routes =======
+@v1_router.post("/register")
+def register():
+    pass
+
+
+
+
 @app.get("/")
 def homepage():
     return {
