@@ -1,15 +1,18 @@
 services:
+
   media-forge-api:
     container_name: media_forge_backend
     build: .
     ports:
       - "8000:8000"
     volumes:
-      - ./app:/app/app
+      - ./:/app
     env_file:
       - .env
     depends_on:
       - postgres
+    networks:
+      - pgnetwork
 
   postgres:
     container_name: media_forge_db
@@ -20,6 +23,26 @@ services:
       - "5432:5432"
     volumes:
       - media_forge_db_data:/var/lib/postgresql
+    networks:
+      - pgnetwork
+
+  pgadmin:
+    container_name: postgresManagement
+    image: dpage/pgadmin4:9.18
+    env_file:
+      - .env
+    ports:
+      - "5050:5050"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - pgnetwork
 
 volumes:
   media_forge_db_data:
+  pgadmin_data:
+
+networks:
+  pgnetwork:

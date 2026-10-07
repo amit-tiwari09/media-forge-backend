@@ -14,10 +14,10 @@ from datetime import datetime, timezone
 
 
 class File(Base):
-    ___tablename__ = "files"
+    __tablename__ = "files"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary=True, autoincrement=True)
-    uuid: Mapped[uuid.UUID] = mapped_column(
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    uuid: Mapped[str] = mapped_column(
         UUID(as_uuid=True),
         unique=True,
         default=uuid.uuid4,

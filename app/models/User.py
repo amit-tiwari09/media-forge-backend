@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
-    uuid: Mapped[uuid.UUID] = mapped_column(
+    uuid: Mapped[str] = mapped_column(
         UUID(as_uuid=True),
         unique=True,
         default=uuid.uuid4,
