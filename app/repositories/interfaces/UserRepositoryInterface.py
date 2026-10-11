@@ -9,9 +9,18 @@ class UserRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def get_by_id(self, user_id: int, columns: list[str]) -> User | None:
+    def get_by_id(self, user_id: int, columns: list[str] | None) -> User | None:
         pass
 
     @abstractmethod
-    def list_all(self, columns: list[str]) -> list[User]:
+    def get_by_credentials(
+        self, credential: str, columns: list[str] | None
+    ) -> User | None:
+        pass
+
+    @abstractmethod
+    def list_all(self, columns: list[str] | None) -> list[User]:
+        pass
+
+    def isEmailExists(self, email: str) -> bool:
         pass
