@@ -24,7 +24,6 @@ v1_router = APIRouter(prefix="/api/v1")
 
 
 # ======= Auth Routes =======
-
 # ==register
 @v1_router.post(
     "/register",
@@ -33,31 +32,20 @@ v1_router = APIRouter(prefix="/api/v1")
 def register(
     userData: UserRegisterRequest, authService: AuthService = Depends(getAuthService)
 ):
-    user = authService.register(userData)
-
-    userResponse = UserResponse.model_validate(user)
+    response = authService.register(userData)
 
     return successResponse(
         message="User registered successfully",
-        data=userResponse,
+        data=response,
     )
+
 
 # ==login
 @v1_router.post("/login", status_code=status.HTTP_201_CREATED)
 def login(data: UserLoginRequest, authService: AuthService = Depends(getAuthService)):
-    pass
+    response = authService.login(data)
 
-
-
-
-
-
-
-
-
-
-
-
+    return successResponse(message="User Authentication Success", data=response)
 
 
 @app.get("/")

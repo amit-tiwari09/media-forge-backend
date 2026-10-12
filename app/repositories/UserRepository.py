@@ -9,6 +9,7 @@ class UserRepository(UserRepositoryInterface):
         self.session = session
 
     def _columns(self, columns: list[str] | None):
+
         if columns is None:
             return [User]
 
@@ -23,25 +24,24 @@ class UserRepository(UserRepositoryInterface):
         return User
 
     # return a user record mathing with id
-    def get_by_id(self, user_id: int, columns: list[str] | None) -> User | None:
+    def get_by_id(self, user_id: int, columns: list[str] | None):
         return self.session.execute(
             select(*self._columns(columns)).where(User.id == user_id)
         ).scalar_one_or_none()
 
     # return a user record mathing with credentials like (email, phone etc)
-    def get_by_credentials(
-        self, credential: str, columns: list[str] | None
-    ) -> User | None:
+    def get_by_credentials(self, credential: str, columns: list[str] | None):
+
         return self.session.execute(
             select(*self._columns(columns)).where(User.email == credential)
-        ).scalar_one_or_none()
+        ).one_or_none()
 
     # list all the user records
-    def list_all(self, columns: list[str] | None) -> list[User]:
+    def list_all(self, columns: list[str] | None):
         return self.session.execute(select(*self._columns(columns))).scalars().all()
 
     # check if the email exists already in db or not
-    def isEmailExists(self, email: str) -> bool:
+    def isEmailExists(self, email: str):
         return self.session.execute(
             select(exists().where(User.email == email))
         ).scalar()

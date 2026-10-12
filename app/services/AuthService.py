@@ -2,9 +2,10 @@ from fastapi import HTTPException
 from app.repositories import UserRepository
 from app.schemas.request.User import UserRegisterRequest, UserLoginRequest
 from app.models.User import User
-from app.core.security import hashPassword
+from app.core.security import hashPassword, verifyPassword, createAccessToken
 
 from app.exceptions.AppException import AppException
+from app.schemas.response.UserResponse import UserResponse
 
 
 class AuthService:
@@ -21,14 +22,24 @@ class AuthService:
                 errors={"email": ["This email is already registered."]},
             )
 
-        return self.userRepo.add(
+        user = self.userRepo.add(
             User(name=data.name, email=data.email, password=hashPassword(data.password))
         )
 
+        accessToken = createAccessToken(user.id, user.uuid)
+
+        return {"token": accessToken, "user": UserResponse.model_validate(user)}
+
     # ======= Login User
     def login(self, data: UserLoginRequest):
-
-        user = self.userRepo.get_by_credentials(data.email)
+        user = self.userRepo.get_by_credentials(data.email, ["id", "uuid", "password"])
 
         if not user:
             raise AppException(message="Wrong Credentials", statusCode=401)
+
+        if not verifyPassword(data.password, user.password):
+            raise AppException(message="Wrong Credentials", statusCode=401)
+
+        accessToken = createAccessToken(user.id, user.uuid)
+
+        return {"token": accessToken}
