@@ -4,7 +4,7 @@ from app.core.database import get_db
 from app.models.User import User
 from app.schemas.request.User import UserRegisterRequest, UserLoginRequest
 from app.services.AuthService import AuthService
-from app.core.dependency import getAuthService
+from app.core.dependency import getAuthService, auth_required
 
 
 from app.exceptions.AppException import AppException
@@ -58,6 +58,18 @@ def homepage():
 @v1_router.post("/file")
 def upload_convert_file():
     return {"message": "The Api Endpoint is working fine"}
+
+
+# ======= Protected Route
+@v1_router.get("/me")
+def get_authenticated_user(user_id: int = Depends(auth_required)):
+    return {
+        "success": True,
+        "message": "Authenticated successfully",
+        "data": {
+            "user_id": user_id,
+        },
+    }
 
 
 app.include_router(v1_router)

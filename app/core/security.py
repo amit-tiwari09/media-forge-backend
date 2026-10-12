@@ -31,3 +31,11 @@ def createAccessToken(userId: int, userUuid: str) -> str:
         dbSetting.JWT_SECRET_KEY,
         algorithm=dbSetting.JWT_ALGORITHM,
     )
+
+
+def decodeAccessToken(accessToken: str) -> dict:
+    return jwt.decode(
+        accessToken,
+        dbSetting.JWT_SECRET_KEY,
+        algorithms=[dbSetting.JWT_ALGORITHM],
+    )
